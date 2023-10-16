@@ -21,6 +21,34 @@ Usage:
 -v <script version>
 ~~~
 
+### Example of generated header
+
+~~~c
+/*
+ * File: version.h
+ * Generated with c-versionner.sh rev 1.0.0
+ */
+#ifndef _VERSION_H_
+#define _VERSION_H_
+
+/* Firmware version */
+#define FIRMWARE_VERSION_MAJOR    1
+#define FIRMWARE_VERSION_MINOR    0
+#define FIRMWARE_VERSION_FIX      4
+
+#define BRANCH_NAME               "main"
+#define NB_COMMITS_SINCE_LAST_TAG 14
+#define COMMIT_SHORT_SHA          "0be5335"
+
+/* Build date time (UTC) */
+#define BUILD_DAY          16
+#define BUILD_MONTH        10
+#define BUILD_YEAR         2023
+#define BUILD_HOUR         13
+
+#endif /* _VERSION_H_ */
+~~~
+
 ## Code quality
 
 ~~~txt
