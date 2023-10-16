@@ -18,7 +18,7 @@
 # Script self version informations
 C_VERSIONNER_MAJOR=0
 C_VERSIONNER_MINOR=2
-C_VERSIONNER_FIX=4
+C_VERSIONNER_FIX=5
 
 # Print variables
 C_VERSIONNER="c-versionner.sh"
@@ -189,6 +189,9 @@ BASENAME="$(basename "$FILE_PATH")"
 # Change filename chars to UPPER and non-alphanum to UNDERSCORES...
 BUILD_LOCK=$(echo "${BASENAME}" | awk 'BEGIN { getline; print toupper($0) }' | sed 's/[^[:alnum:]\r\t]/_/g')
 
+MACRO_PREFIX="${BUILD_LOCK#_}"
+MACRO_PREFIX="${MACRO_PREFIX%%_*}"
+
 # Modify the tmp version file
 {   echo "/*";
     echo " * File: $BASENAME";
@@ -200,20 +203,20 @@ BUILD_LOCK=$(echo "${BASENAME}" | awk 'BEGIN { getline; print toupper($0) }' | s
     echo "#define _${BUILD_LOCK}_";
     echo "";
     echo "/* Project version */";
-    echo "#define PROJECT_VERSION_MAJOR     $FW_MAJOR";
-    echo "#define PROJECT_VERSION_MINOR     $FW_MINOR";
-    echo "#define PROJECT_VERSION_FIX       $FW_FIX";
+    echo "#define ""$MACRO_PREFIX""_MAJOR                       $FW_MAJOR";
+    echo "#define ""$MACRO_PREFIX""_MINOR                       $FW_MINOR";
+    echo "#define ""$MACRO_PREFIX""_FIX                         $FW_FIX";
     echo ""
     echo "/* Git repo info */";
-    echo "#define BRANCH_NAME               \"$BRANCH_NAME\"";
-    echo "#define NB_COMMITS_SINCE_LAST_TAG $NB_COMMIT_SINCE_LAST_TAG";
-    echo "#define COMMIT_SHORT_SHA          \"$COMMIT_SHA\"";
+    echo "#define ""$MACRO_PREFIX""_BRANCH_NAME                 \"$BRANCH_NAME\"";
+    echo "#define ""$MACRO_PREFIX""_NB_COMMITS_SINCE_LAST_TAG   $NB_COMMIT_SINCE_LAST_TAG";
+    echo "#define ""$MACRO_PREFIX""_COMMIT_SHORT_SHA            \"$COMMIT_SHA\"";
     echo ""
     echo "/* Build date time (UTC) */";
-    echo "#define BUILD_DAY                 $DAY";
-    echo "#define BUILD_MONTH               $MONTH";
-    echo "#define BUILD_YEAR                $YEAR";
-    echo "#define BUILD_HOUR                $HOUR";
+    echo "#define ""$MACRO_PREFIX""_BUILD_DAY                   $DAY";
+    echo "#define ""$MACRO_PREFIX""_BUILD_MONTH                 $MONTH";
+    echo "#define ""$MACRO_PREFIX""_BUILD_YEAR                  $YEAR";
+    echo "#define ""$MACRO_PREFIX""_BUILD_HOUR                  $HOUR";
     echo "";
     echo "#endif /* _${BUILD_LOCK}_ */";
 } > "${FILE_PATH}_tmp.h"
