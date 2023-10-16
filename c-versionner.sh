@@ -15,11 +15,16 @@
 # 
 # ==========================================
 
+# Script self version informations
 C_VERSIONNER_MAJOR=0
 C_VERSIONNER_MINOR=2
-C_VERSIONNER_FIX=1
+C_VERSIONNER_FIX=2
 
+# Print variables
+C_VERSIONNER="c-versionner.sh"
 C_VERSIONNER_REV="$C_VERSIONNER_MAJOR.$C_VERSIONNER_MINOR.$C_VERSIONNER_FIX"
+C_VERSIONNER_INTRO_L1="A little POSIX shell script to generate"
+C_VERSIONNER_INTRO_L2="version informations for your C project"
 
 # ==========================================
 # Default settings
@@ -50,11 +55,11 @@ OUTPUT_FILE_PATH=$DEFAULT_FILE_NAME
 # The user has to provide the path for the
 # dest file when calling the script
 usage() {
-    echo "==> c-versionner $C_VERSIONNER_REV"
-    echo "A little POSIX shell script to generate"
-    echo "version informations for your C project"
+    echo "==> $C_VERSIONNER $C_VERSIONNER_REV"
+    echo "$C_VERSIONNER_INTRO_L1"
+    echo "$C_VERSIONNER_INTRO_L2"
     echo "Usage:"
-    echo "$0 [options]"
+    echo "$C_VERSIONNER [options]"
     echo "-o <output file path>"
     echo "-f <tag format>"
     echo "-h <help>"
@@ -187,25 +192,28 @@ BUILD_LOCK=$(echo "${BASENAME}" | awk 'BEGIN { getline; print toupper($0) }' | s
 # Modify the tmp version file
 {   echo "/*";
     echo " * File: $BASENAME";
-    echo " * Generated with $(basename "$0") rev $C_VERSIONNER_REV";
+    echo " * Generated with $C_VERSIONNER $C_VERSIONNER_REV";
+    echo " * $C_VERSIONNER_INTRO_L1";
+    echo " * $C_VERSIONNER_INTRO_L2";
     echo " */";
     echo "#ifndef _${BUILD_LOCK}_";
     echo "#define _${BUILD_LOCK}_";
     echo "";
-    echo "/* Firmware version */";
-    echo "#define FIRMWARE_VERSION_MAJOR    $FW_MAJOR";
-    echo "#define FIRMWARE_VERSION_MINOR    $FW_MINOR";
-    echo "#define FIRMWARE_VERSION_FIX      $FW_FIX";
+    echo "/* Project version */";
+    echo "#define PROJECT_VERSION_MAJOR     $FW_MAJOR";
+    echo "#define PROJECT_VERSION_MINOR     $FW_MINOR";
+    echo "#define PROJECT_VERSION_FIX       $FW_FIX";
     echo ""
+    echo "/* Git repo info */";
     echo "#define BRANCH_NAME               \"$BRANCH_NAME\"";
     echo "#define NB_COMMITS_SINCE_LAST_TAG $NB_COMMIT_SINCE_LAST_TAG";
     echo "#define COMMIT_SHORT_SHA          \"$COMMIT_SHA\"";
     echo ""
     echo "/* Build date time (UTC) */";
-    echo "#define BUILD_DAY          $DAY";
-    echo "#define BUILD_MONTH        $MONTH";
-    echo "#define BUILD_YEAR         $YEAR";
-    echo "#define BUILD_HOUR         $HOUR";
+    echo "#define BUILD_DAY                 $DAY";
+    echo "#define BUILD_MONTH               $MONTH";
+    echo "#define BUILD_YEAR                $YEAR";
+    echo "#define BUILD_HOUR                $HOUR";
     echo "";
     echo "#endif /* _${BUILD_LOCK}_ */";
 } > "${FILE_PATH}_tmp.h"
