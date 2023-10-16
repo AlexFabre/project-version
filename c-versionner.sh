@@ -18,7 +18,7 @@
 # Script self version informations
 C_VERSIONNER_MAJOR=0
 C_VERSIONNER_MINOR=2
-C_VERSIONNER_FIX=3
+C_VERSIONNER_FIX=4
 
 # Print variables
 C_VERSIONNER="c-versionner.sh"
@@ -106,19 +106,19 @@ done
 #   ex: Input "src/subdir/version"
 #           Ouput "src/subdir/version.h"
 file_path_checker() {
-  # Get the last part of the path after the last '/'
-  filename="${1##*/}"
+    # Get the last part of the path after the last '/'
+    filename="${1##*/}"
 
-  # Default filename when missing
-  if [ -z "$filename" ]; then
+    # Default filename when missing
+    if [ -z "$filename" ]; then
     filename="$DEFAULT_FILE_NAME"
-  fi
+    fi
 
-  # Appends the extension if missing
-  filename="${filename%"$EXTENSION"}$EXTENSION"
+    # Appends the extension if missing
+    filename="${filename%"$EXTENSION"}$EXTENSION"
 
-  # Return the updated path
-  echo "$(dirname "$1")/$filename"
+    # Return the updated path
+    echo "$(dirname "$1")/$filename"
 }
 
 # ==========================================
