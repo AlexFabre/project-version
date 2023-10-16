@@ -16,7 +16,7 @@
 # ==========================================
 
 C_VERSIONNER_MAJOR=0
-C_VERSIONNER_MINOR=1
+C_VERSIONNER_MINOR=2
 C_VERSIONNER_FIX=0
 
 C_VERSIONNER_REV="$C_VERSIONNER_MAJOR.$C_VERSIONNER_MINOR.$C_VERSIONNER_FIX"
@@ -25,9 +25,23 @@ C_VERSIONNER_REV="$C_VERSIONNER_MAJOR.$C_VERSIONNER_MINOR.$C_VERSIONNER_FIX"
 # Default settings
 # ==========================================
 
+# If the path provided with option -o does end on a directory 
+# with a trailing '/' (ex. -o dir/subdir/ ), then the script
+# will create the file version.h in that directory
 DEFAULT_FILE_NAME="version.h"
-DEFAULT_EXTENSION=".h"
-DEFAULT_TAG_PREFIX="v"
+
+# Extension to look for when checking that the path 
+# given with option -o leads to a header file
+EXTENSION=".h"
+
+# By default the script will look for tags in the format
+# v1.0.4
+# Option -f allow for custom tag prefix
+# ex. "-f fv-" if your tags are like this "fw-1.0.4" 
+TAG_PREFIX="v"
+
+# Default file path output
+OUTPUT_FILE_PATH=$DEFAULT_FILE_NAME
 
 # ==========================================
 # Script call checks
@@ -36,20 +50,40 @@ DEFAULT_TAG_PREFIX="v"
 # The user has to provide the path for the
 # dest file when calling the script
 usage() {
-    echo "==> Usage: $0 file"
-    exit 1
+    echo "==> c-versionner $C_VERSIONNER_REV"
+    echo "A little POSIX shell script to generate"
+    echo "version informations for your C project"
+    echo "Usage:"
+    echo "$0 [options]"
+    echo "-o <output file path>"
+    echo "-f <tag format>"
+    echo "-h <help>"
+    echo "-v <script version>"
 }
 
 # Check the call of the script
-if [ $# -eq 0 ]; then
-    usage
-fi
-
-if [ $# -eq 1 ]; then
-    TAG_PREFIX="$DEFAULT_TAG_PREFIX"
-else
-    TAG_PREFIX="$2"
-fi
+while getopts ":o:f:hv" opt; do
+    case "${opt}" in
+        o)
+            OUTPUT_FILE_PATH=${OPTARG}
+            ;;
+        f)
+            TAG_PREFIX=${OPTARG}
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+        v)
+            echo "$C_VERSIONNER_REV"
+            exit 0
+            ;;
+        *)
+            usage
+            exit 1
+            ;;
+    esac
+done
 
 # ==========================================
 # Functions
@@ -76,7 +110,7 @@ file_path_checker() {
   fi
 
   # Appends the extension if missing
-  filename="${filename%"$DEFAULT_EXTENSION"}$DEFAULT_EXTENSION"
+  filename="${filename%"$EXTENSION"}$EXTENSION"
 
   # Return the updated path
   echo "$(dirname "$1")/$filename"
@@ -87,7 +121,7 @@ file_path_checker() {
 # ==========================================
 
 # Version file path
-FILE_PATH=$(file_path_checker "$1")
+FILE_PATH=$(file_path_checker "$OUTPUT_FILE_PATH")
 
 # Git describe command
 GIT_DESCRIBE=$(git describe 2> /dev/null)
