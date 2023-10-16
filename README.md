@@ -10,7 +10,7 @@ All available options can be listed with option `-h`
 
 ~~~sh
 $ ./c-versionner.sh -h
-==> c-versionner 1.0.0
+==> c-versionner 0.2.3
 A little POSIX shell script to generate
 version informations for your C project
 Usage:
@@ -26,25 +26,28 @@ Usage:
 ~~~c
 /*
  * File: version.h
- * Generated with c-versionner.sh rev 1.0.0
+ * Generated with c-versionner.sh 0.2.3
+ * A little POSIX shell script to generate
+ * version informations for your C project
  */
 #ifndef _VERSION_H_
 #define _VERSION_H_
 
-/* Firmware version */
-#define FIRMWARE_VERSION_MAJOR    1
-#define FIRMWARE_VERSION_MINOR    0
-#define FIRMWARE_VERSION_FIX      4
+/* Project version */
+#define PROJECT_VERSION_MAJOR     1
+#define PROJECT_VERSION_MINOR     0
+#define PROJECT_VERSION_FIX       4
 
+/* Git repo info */
 #define BRANCH_NAME               "main"
 #define NB_COMMITS_SINCE_LAST_TAG 14
-#define COMMIT_SHORT_SHA          "0be5335"
+#define COMMIT_SHORT_SHA          "60ab8e4"
 
 /* Build date time (UTC) */
-#define BUILD_DAY          16
-#define BUILD_MONTH        10
-#define BUILD_YEAR         2023
-#define BUILD_HOUR         13
+#define BUILD_DAY                 16
+#define BUILD_MONTH               10
+#define BUILD_YEAR                2023
+#define BUILD_HOUR                14
 
 #endif /* _VERSION_H_ */
 ~~~

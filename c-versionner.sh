@@ -18,7 +18,7 @@
 # Script self version informations
 C_VERSIONNER_MAJOR=0
 C_VERSIONNER_MINOR=2
-C_VERSIONNER_FIX=2
+C_VERSIONNER_FIX=3
 
 # Print variables
 C_VERSIONNER="c-versionner.sh"
@@ -129,7 +129,7 @@ file_path_checker() {
 FILE_PATH=$(file_path_checker "$OUTPUT_FILE_PATH")
 
 # Git describe command
-GIT_DESCRIBE=$(git describe 2> /dev/null)
+GIT_DESCRIBE=$(git describe --tags --long 2> /dev/null)
 
 # Check the length of the git describe result
 # Because when no previous tags are found, describe returns nothing
