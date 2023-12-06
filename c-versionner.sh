@@ -17,8 +17,8 @@
 
 # Script self version informations
 C_VERSIONNER_MAJOR=0
-C_VERSIONNER_MINOR=2
-C_VERSIONNER_FIX=7
+C_VERSIONNER_MINOR=3
+C_VERSIONNER_FIX=0
 
 # Print variables
 C_VERSIONNER="c-versionner.sh"
@@ -193,8 +193,10 @@ MACRO_PREFIX="${BUILD_LOCK#_}"
 MACRO_PREFIX="${MACRO_PREFIX%%_*}"
 
 # Modify the tmp version file
-{   echo "/*";
-    echo " * File: $BASENAME";
+{   echo "/**";
+    echo " * @file $BASENAME";
+    echo " * @brief version info of project build";
+    echo " *";
     echo " * Generated with $C_VERSIONNER $C_VERSIONNER_REV";
     echo " * $C_VERSIONNER_INTRO_L1";
     echo " * $C_VERSIONNER_INTRO_L2";

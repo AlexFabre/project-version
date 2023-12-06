@@ -10,7 +10,7 @@ All available options can be listed with option `-h`
 
 ~~~sh
 $ ./c-versionner.sh -h
-==> c-versionner 0.2.3
+==> c-versionner 0.3.0
 A little POSIX shell script to generate
 version informations for your C project
 Usage:
@@ -24,9 +24,11 @@ Usage:
 ### Example of generated header
 
 ~~~c
-/*
- * File: version.h
- * Generated with c-versionner.sh 0.2.3
+/**
+ * @file version.h
+ * @brief version info of project build
+ * 
+ * Generated with c-versionner.sh 0.3.0
  * A little POSIX shell script to generate
  * version informations for your C project
  */
