@@ -2,23 +2,23 @@
 # ==========================================
 #   c-versionner - A little POSIX shell script to generate
 #                  version informations for your C project
-#   Copyright (C) 2023 Alex Fabre
+#   Copyright (C) 2024 Alex Fabre
 #   [Released under MIT License. Please refer to license.txt for details]
 # ==========================================
 
 # ==========================================
 # Usage with standard tag names vXX.YY.ZZ
-#   $> c-versionner.sh dir/subdir/file_version.h
+#   $> c-versionner.sh -o dir/subdir/file_version.h
 #
 # Usage with custom tag names fw-XX.YY.ZZ
-#   $> c-versionner.sh dir/subdir/file_version.h fw-
+#   $> c-versionner.sh -o dir/subdir/file_version.h -f fw-
 # 
 # ==========================================
 
 # Script self version informations
 C_VERSIONNER_MAJOR=0
 C_VERSIONNER_MINOR=3
-C_VERSIONNER_FIX=0
+C_VERSIONNER_FIX=1
 
 # Print variables
 C_VERSIONNER="c-versionner.sh"

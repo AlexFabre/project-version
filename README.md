@@ -28,7 +28,7 @@ Usage:
  * @file version.h
  * @brief version info of project build
  * 
- * Generated with c-versionner.sh 0.3.0
+ * Generated with c-versionner.sh 0.3.1
  * A little POSIX shell script to generate
  * version informations for your C project
  */
@@ -58,7 +58,7 @@ Usage:
 
 ~~~txt
 ShellCheck - shell script analysis tool
-version: 0.9.0
+version: 0.10.0
 license: GNU General Public License, version 3
 website: https://www.shellcheck.net
 ~~~
