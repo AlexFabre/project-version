@@ -227,10 +227,10 @@ if cmp -s "${FILE_PATH}" "${FILE_PATH}_tmp.h"
 then
     # New file and previous one are identical. No need to rewrite it
     rm "${FILE_PATH}_tmp.h"
-    echo "==> \"$FILE_PATH\" unchanged"
+    echo "==> \"$FILE_PATH\" unchanged: $TAG_PREFIX$FW_MAJOR.$FW_MINOR.$FW_FIX (sha: $COMMIT_SHA)"
     exit 0 # exit with the success code
 else
     mv "${FILE_PATH}_tmp.h" "${FILE_PATH}"
-    echo "==> \"$FILE_PATH\" updated"
+    echo "==> \"$FILE_PATH\" updated: $TAG_PREFIX$FW_MAJOR.$FW_MINOR.$FW_FIX (sha: $COMMIT_SHA)"
     exit 0 # exit with the success code
 fi
