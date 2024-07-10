@@ -18,7 +18,7 @@
 # Script self version informations
 C_VERSIONNER_MAJOR=0
 C_VERSIONNER_MINOR=3
-C_VERSIONNER_FIX=1
+C_VERSIONNER_FIX=2
 
 # Print variables
 C_VERSIONNER="c-versionner.sh"
