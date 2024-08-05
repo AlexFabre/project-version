@@ -125,6 +125,13 @@ file_path_checker() {
 # Script
 # ==========================================
 
+# Check if git is installed
+if ! command -v git >/dev/null 2>&1
+then
+    echo "Error: git is not installed."
+    exit 1
+fi
+
 # Version file path
 FILE_PATH=$(file_path_checker "$OUTPUT_FILE_PATH")
 
