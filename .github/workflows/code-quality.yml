@@ -22,3 +22,11 @@ jobs:
       - name: Codespell action
         uses: codespell-project/actions-codespell@v2
             
+
+  Version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - runs:
+        - ./c-versionner.sh
+        - ci-script/check_version.sh ../version.h
