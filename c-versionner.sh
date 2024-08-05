@@ -61,7 +61,7 @@ usage() {
     echo "Usage:"
     echo "$C_VERSIONNER [options]"
     echo "-o <output file path>"
-    echo "-f <tag format>"
+    echo "-f <tag format> (default 'v')"
     echo "-h <help>"
     echo "-v <script version>"
 }
