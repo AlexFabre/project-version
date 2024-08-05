@@ -27,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - runs:
-        - ./c-versionner.sh
-        - ci-script/check_version.sh ../version.h
+      - run: |
+          ./c-versionner.sh
+          echo Checking version
+          ci-script/check_version.sh version.h

@@ -17,8 +17,8 @@
 
 # Script self version information
 C_VERSIONNER_MAJOR=0
-C_VERSIONNER_MINOR=3
-C_VERSIONNER_FIX=2
+C_VERSIONNER_MINOR=4
+C_VERSIONNER_FIX=0
 
 # Print variables
 C_VERSIONNER="c-versionner.sh"
@@ -131,6 +131,9 @@ then
     echo "Error: git is not installed."
     exit 1
 fi
+
+git_version=$(git --version)
+echo "$git_version"
 
 # Version file path
 FILE_PATH=$(file_path_checker "$OUTPUT_FILE_PATH")

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Define the file paths
-FILE1="../c-versionner.sh"
+FILE1="c-versionner.sh"
 FILE2="$1"
 
 # Check if FILE2 is provided
@@ -44,15 +44,15 @@ compare_versions() {
     if [ "$value1" != "$value2" ]; then
         echo "$var_name values are different:"
         echo "$FILE1: $var_name=$value1"
-        echo "$FILE2: ${var_name#C_}=$value2"
+        echo "$FILE2: $var_name=$value2"
         status=1
     fi
 }
 
 # Perform comparisons
-compare_versions "C_VERSIONNER_MAJOR" "$VERSION_MAJOR_FILE1" "$VERSION_MAJOR_FILE2"
-compare_versions "C_VERSIONNER_MINOR" "$VERSION_MINOR_FILE1" "$VERSION_MINOR_FILE2"
-compare_versions "C_VERSIONNER_BUILD" "$VERSION_BUILD_FILE1" "$VERSION_BUILD_FILE2"
+compare_versions "MAJOR" "$VERSION_MAJOR_FILE1" "$VERSION_MAJOR_FILE2"
+compare_versions "MINOR" "$VERSION_MINOR_FILE1" "$VERSION_MINOR_FILE2"
+compare_versions "BUILD" "$VERSION_BUILD_FILE1" "$VERSION_BUILD_FILE2"
 
 # Return the status
 exit $status
