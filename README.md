@@ -1,6 +1,8 @@
 # c-versionner
 
-A little POSIX script to generate version informations for your C project
+A little POSIX shell script that generates version information for your C project.
+
+Works by parsing the git describe command to retrieve all information since the last tag found.
 
 ## Usage
 
@@ -12,7 +14,7 @@ All available options can be listed with option `-h`
 $ ./c-versionner.sh -h
 ==> c-versionner 0.3.2
 A little POSIX shell script to generate
-version informations for your C project
+version information for your C project
 Usage:
 ./c-versionner.sh [options]
 -o <output file path>
@@ -30,7 +32,7 @@ Usage:
  * 
  * Generated with c-versionner.sh 0.3.2
  * A little POSIX shell script to generate
- * version informations for your C project
+ * version information for your C project
  */
 #ifndef _VERSION_H_
 #define _VERSION_H_
