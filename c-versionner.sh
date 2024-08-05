@@ -45,6 +45,16 @@ EXTENSION=".h"
 # ex. "-f fv-" if your tags are like this "fw-1.0.4" 
 TAG_PREFIX="v"
 
+# By default the script runs and prints only:
+# On success:
+# ==> "./version.h" updated: v0.3.2 (sha: e03685b)
+# On failure:
+# ==> No previous tag found
+# ==> "./version.h" updated: v0.0.0 (sha: e03685b)
+# With option -l the logs of the script are printed
+# out during execution
+LOG_VERBOSITY=0
+
 # Default file path output
 OUTPUT_FILE_PATH=$DEFAULT_FILE_NAME
 
@@ -64,10 +74,11 @@ usage() {
     echo "-f <tag format> (default 'v')"
     echo "-h <help>"
     echo "-v <script version>"
+    echo "-l <script logs> (default none)"
 }
 
 # Check the call of the script
-while getopts ":o:f:hv" opt; do
+while getopts ":o:f:hvl" opt; do
     case "${opt}" in
         o)
             OUTPUT_FILE_PATH=${OPTARG}
@@ -82,6 +93,9 @@ while getopts ":o:f:hv" opt; do
         v)
             echo "$C_VERSIONNER_REV"
             exit 0
+            ;;
+        l)
+            LOG_VERBOSITY=1
             ;;
         *)
             usage
@@ -121,6 +135,13 @@ file_path_checker() {
     echo "$(dirname "$1")/$filename"
 }
 
+log() {
+    if [ "$LOG_VERBOSITY" = "1" ]
+    then
+        echo "log: $1 $2"
+    fi
+}
+
 # ==========================================
 # Script
 # ==========================================
@@ -132,11 +153,22 @@ then
     exit 1
 fi
 
+git_version=$(git --version)
+log "$git_version"
+
 # Version file path
 FILE_PATH=$(file_path_checker "$OUTPUT_FILE_PATH")
 
+log "output file:" "$FILE_PATH"
+
+log "tag prefix:" "$TAG_PREFIX"
+
+tag_list=$(git tag -l "$TAG_PREFIX""[0-9]*.[0-9]*.[0-9]*")
+log "tag list:" "$tag_list"
+
 # Git describe command
-GIT_DESCRIBE=$(git describe --tags --long --match "$TAG_PREFIX""[0-9]*.[0-9]*.[0-9]*" 2> /dev/null)
+GIT_DESCRIBE=$(git describe --tags --long --match "${TAG_PREFIX}[0-9]*.[0-9]*.[0-9]*" 2> /dev/null)
+log "git describe output:" "$GIT_DESCRIBE"
 
 # Check the length of the git describe result
 # Because when no previous tags are found, describe returns nothing
