@@ -3,22 +3,23 @@
 name: Code Quality
 
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-
 jobs:
-  Quality:
+  Shellcheck:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-      - name: ShellCheck
+      - name: ShellCheck action
         uses: ludeeus/action-shellcheck@2.0.0
+
+  Codespell:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Codespell action
+        uses: plettich/python_codespell_action@v0.1
             
