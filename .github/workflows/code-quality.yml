@@ -20,5 +20,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Codespell action
-        uses: plettich/python_codespell_action@v0.1
+        uses: codespell-project/actions-codespell@v2
             
