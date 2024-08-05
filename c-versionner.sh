@@ -1,7 +1,7 @@
 #!/bin/sh
 # ==========================================
 #   c-versionner - A little POSIX shell script to generate
-#                  version informations for your C project
+#                  version information for your C project
 #   Copyright (C) 2024 Alex Fabre
 #   [Released under MIT License. Please refer to license.txt for details]
 # ==========================================
@@ -15,7 +15,7 @@
 # 
 # ==========================================
 
-# Script self version informations
+# Script self version information
 C_VERSIONNER_MAJOR=0
 C_VERSIONNER_MINOR=3
 C_VERSIONNER_FIX=2
@@ -24,7 +24,7 @@ C_VERSIONNER_FIX=2
 C_VERSIONNER="c-versionner.sh"
 C_VERSIONNER_REV="$C_VERSIONNER_MAJOR.$C_VERSIONNER_MINOR.$C_VERSIONNER_FIX"
 C_VERSIONNER_INTRO_L1="A little POSIX shell script to generate"
-C_VERSIONNER_INTRO_L2="version informations for your C project"
+C_VERSIONNER_INTRO_L2="version information for your C project"
 
 # ==========================================
 # Default settings
@@ -104,7 +104,7 @@ done
 #       Output "src/subdir/version.h"
 #   - Appends the default extension if missing
 #   ex: Input "src/subdir/version"
-#           Ouput "src/subdir/version.h"
+#           Output "src/subdir/version.h"
 file_path_checker() {
     # Get the last part of the path after the last '/'
     filename="${1##*/}"
