@@ -10,15 +10,21 @@ on:
 jobs:
   Shellcheck:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: ShellCheck action
         uses: ludeeus/action-shellcheck@2.0.0
 
   Codespell:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Codespell action
-        uses: plettich/python_codespell_action@v0.1
-            
+        uses: codespell-project/actions-codespell@v2
+        

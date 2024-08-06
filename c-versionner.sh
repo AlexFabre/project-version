@@ -1,7 +1,7 @@
 #!/bin/sh
 # ==========================================
 #   c-versionner - A little POSIX shell script to generate
-#                  version informations for your C project
+#                  version information for your C project
 #   Copyright (C) 2024 Alex Fabre
 #   [Released under MIT License. Please refer to license.txt for details]
 # ==========================================
@@ -15,16 +15,16 @@
 # 
 # ==========================================
 
-# Script self version informations
+# Script self version information
 C_VERSIONNER_MAJOR=0
-C_VERSIONNER_MINOR=3
-C_VERSIONNER_FIX=2
+C_VERSIONNER_MINOR=4
+C_VERSIONNER_PATCH=0
 
 # Print variables
 C_VERSIONNER="c-versionner.sh"
-C_VERSIONNER_REV="$C_VERSIONNER_MAJOR.$C_VERSIONNER_MINOR.$C_VERSIONNER_FIX"
+C_VERSIONNER_REV="$C_VERSIONNER_MAJOR.$C_VERSIONNER_MINOR.$C_VERSIONNER_PATCH"
 C_VERSIONNER_INTRO_L1="A little POSIX shell script to generate"
-C_VERSIONNER_INTRO_L2="version informations for your C project"
+C_VERSIONNER_INTRO_L2="version information for your C project"
 
 # ==========================================
 # Default settings
@@ -45,6 +45,16 @@ EXTENSION=".h"
 # ex. "-f fv-" if your tags are like this "fw-1.0.4" 
 TAG_PREFIX="v"
 
+# By default the script runs and prints only:
+# On success:
+# ==> "./version.h" updated: v0.3.2 (sha: e03685b)
+# On failure:
+# ==> No previous tag found
+# ==> "./version.h" updated: v0.0.0 (sha: e03685b)
+# With option -l the logs of the script are printed
+# out during execution
+LOG_VERBOSITY=0
+
 # Default file path output
 OUTPUT_FILE_PATH=$DEFAULT_FILE_NAME
 
@@ -61,13 +71,14 @@ usage() {
     echo "Usage:"
     echo "$C_VERSIONNER [options]"
     echo "-o <output file path>"
-    echo "-f <tag format>"
+    echo "-f <tag format> (default 'v')"
     echo "-h <help>"
     echo "-v <script version>"
+    echo "-l <script logs> (default none)"
 }
 
 # Check the call of the script
-while getopts ":o:f:hv" opt; do
+while getopts ":o:f:hvl" opt; do
     case "${opt}" in
         o)
             OUTPUT_FILE_PATH=${OPTARG}
@@ -82,6 +93,9 @@ while getopts ":o:f:hv" opt; do
         v)
             echo "$C_VERSIONNER_REV"
             exit 0
+            ;;
+        l)
+            LOG_VERBOSITY=1
             ;;
         *)
             usage
@@ -104,7 +118,7 @@ done
 #       Output "src/subdir/version.h"
 #   - Appends the default extension if missing
 #   ex: Input "src/subdir/version"
-#           Ouput "src/subdir/version.h"
+#           Output "src/subdir/version.h"
 file_path_checker() {
     # Get the last part of the path after the last '/'
     filename="${1##*/}"
@@ -121,15 +135,40 @@ file_path_checker() {
     echo "$(dirname "$1")/$filename"
 }
 
+log() {
+    if [ "$LOG_VERBOSITY" = "1" ]
+    then
+        echo "log: $1 $2"
+    fi
+}
+
 # ==========================================
 # Script
 # ==========================================
 
+# Check if git is installed
+if ! command -v git >/dev/null 2>&1
+then
+    echo "Error: git is not installed."
+    exit 1
+fi
+
+git_version=$(git --version)
+log "$git_version"
+
 # Version file path
 FILE_PATH=$(file_path_checker "$OUTPUT_FILE_PATH")
 
+log "output file:" "$FILE_PATH"
+
+log "tag prefix:" "$TAG_PREFIX"
+
+tag_list=$(git tag -l "$TAG_PREFIX""[0-9]*.[0-9]*.[0-9]*")
+log "tag list:" "$tag_list"
+
 # Git describe command
-GIT_DESCRIBE=$(git describe --tags --long --match "$TAG_PREFIX""[0-9]*.[0-9]*.[0-9]*" 2> /dev/null)
+GIT_DESCRIBE=$(git describe --tags --long --match "${TAG_PREFIX}[0-9]*.[0-9]*.[0-9]*" 2> /dev/null)
+log "git describe output:" "$GIT_DESCRIBE"
 
 # Check the length of the git describe result
 # Because when no previous tags are found, describe returns nothing
@@ -137,14 +176,14 @@ if [ -z "$GIT_DESCRIBE" ]; then
     echo "==> No previous tag found"
     FW_MAJOR="0"
     FW_MINOR="0"
-    FW_FIX="0"
+    FW_PATCH="0"
     NB_COMMIT_SINCE_LAST_TAG="0"
 else
     # Parse the result
     # ex: if GIT_DESCRIBE is "v1.0.4-14-g2414721"
     #     then  FW_MAJOR = 1
     #           FW_MINOR = 0
-    #           FW_FIX = 4
+    #           FW_PATCH = 4
     #           NB_COMMIT_SINCE_LAST_TAG = 14
 
     # Extract the version parts using substring manipulation
@@ -159,8 +198,8 @@ else
     FW_MINOR="${GIT_DESCRIBE%%.*}"
     GIT_DESCRIBE="${GIT_DESCRIBE#"$FW_MINOR".}"
 
-    FW_FIX="${GIT_DESCRIBE%%-*}"
-    GIT_DESCRIBE="${GIT_DESCRIBE#"$FW_FIX"-}"
+    FW_PATCH="${GIT_DESCRIBE%%-*}"
+    GIT_DESCRIBE="${GIT_DESCRIBE#"$FW_PATCH"-}"
 
     # Extract the number of commits since last tag
     NB_COMMIT_SINCE_LAST_TAG="${GIT_DESCRIBE%%-*}"
@@ -195,19 +234,22 @@ MACRO_PREFIX="${MACRO_PREFIX%%_*}"
 # Modify the tmp version file
 {   echo "/**";
     echo " * @file $BASENAME";
-    echo " * @brief version info of project build";
+    echo " * @brief version information of project build";
     echo " *";
     echo " * Generated with $C_VERSIONNER $C_VERSIONNER_REV";
     echo " * $C_VERSIONNER_INTRO_L1";
     echo " * $C_VERSIONNER_INTRO_L2";
+    echo " *";
+    echo " * @warning Do not edit this file manually. Its content";
+    echo " * is generated with c-versionner.sh script.";
     echo " */";
-    echo "#ifndef _${BUILD_LOCK}_";
-    echo "#define _${BUILD_LOCK}_";
+    echo "#ifndef ${BUILD_LOCK}__";
+    echo "#define ${BUILD_LOCK}__";
     echo "";
     echo "/* Project version */";
     echo "#define ""$MACRO_PREFIX""_MAJOR                     $FW_MAJOR";
     echo "#define ""$MACRO_PREFIX""_MINOR                     $FW_MINOR";
-    echo "#define ""$MACRO_PREFIX""_FIX                       $FW_FIX";
+    echo "#define ""$MACRO_PREFIX""_PATCH                     $FW_PATCH";
     echo ""
     echo "/* Git repo info */";
     echo "#define ""$MACRO_PREFIX""_BRANCH_NAME               \"$BRANCH_NAME\"";
@@ -220,17 +262,17 @@ MACRO_PREFIX="${MACRO_PREFIX%%_*}"
     echo "#define ""$MACRO_PREFIX""_BUILD_YEAR                $YEAR";
     echo "#define ""$MACRO_PREFIX""_BUILD_HOUR                $HOUR";
     echo "";
-    echo "#endif /* _${BUILD_LOCK}_ */";
+    echo "#endif /* ${BUILD_LOCK}__ */";
 } > "${FILE_PATH}_tmp.h"
 
 if cmp -s "${FILE_PATH}" "${FILE_PATH}_tmp.h"
 then
     # New file and previous one are identical. No need to rewrite it
     rm "${FILE_PATH}_tmp.h"
-    echo "==> \"$FILE_PATH\" unchanged: $TAG_PREFIX$FW_MAJOR.$FW_MINOR.$FW_FIX (sha: $COMMIT_SHA)"
+    echo "==> \"$FILE_PATH\" unchanged: $TAG_PREFIX$FW_MAJOR.$FW_MINOR.$FW_PATCH (sha: $COMMIT_SHA)"
     exit 0 # exit with the success code
 else
     mv "${FILE_PATH}_tmp.h" "${FILE_PATH}"
-    echo "==> \"$FILE_PATH\" updated: $TAG_PREFIX$FW_MAJOR.$FW_MINOR.$FW_FIX (sha: $COMMIT_SHA)"
+    echo "==> \"$FILE_PATH\" updated: $TAG_PREFIX$FW_MAJOR.$FW_MINOR.$FW_PATCH (sha: $COMMIT_SHA)"
     exit 0 # exit with the success code
 fi

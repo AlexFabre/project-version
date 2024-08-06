@@ -1,0 +1,25 @@
+# Code quality workflow
+
+name: Code Quality
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+
+  Version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for all branches and tags
+
+      - name: Run c-versionner on itself
+        run: ./c-versionner.sh -l
+
+      - name: Checking version
+        run: ci-script/check_version.sh c-versionner.sh version.h
