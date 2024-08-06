@@ -18,11 +18,11 @@
 # Script self version information
 C_VERSIONNER_MAJOR=0
 C_VERSIONNER_MINOR=4
-C_VERSIONNER_FIX=0
+C_VERSIONNER_PATCH=0
 
 # Print variables
 C_VERSIONNER="c-versionner.sh"
-C_VERSIONNER_REV="$C_VERSIONNER_MAJOR.$C_VERSIONNER_MINOR.$C_VERSIONNER_FIX"
+C_VERSIONNER_REV="$C_VERSIONNER_MAJOR.$C_VERSIONNER_MINOR.$C_VERSIONNER_PATCH"
 C_VERSIONNER_INTRO_L1="A little POSIX shell script to generate"
 C_VERSIONNER_INTRO_L2="version information for your C project"
 
@@ -176,14 +176,14 @@ if [ -z "$GIT_DESCRIBE" ]; then
     echo "==> No previous tag found"
     FW_MAJOR="0"
     FW_MINOR="0"
-    FW_FIX="0"
+    FW_PATCH="0"
     NB_COMMIT_SINCE_LAST_TAG="0"
 else
     # Parse the result
     # ex: if GIT_DESCRIBE is "v1.0.4-14-g2414721"
     #     then  FW_MAJOR = 1
     #           FW_MINOR = 0
-    #           FW_FIX = 4
+    #           FW_PATCH = 4
     #           NB_COMMIT_SINCE_LAST_TAG = 14
 
     # Extract the version parts using substring manipulation
@@ -198,8 +198,8 @@ else
     FW_MINOR="${GIT_DESCRIBE%%.*}"
     GIT_DESCRIBE="${GIT_DESCRIBE#"$FW_MINOR".}"
 
-    FW_FIX="${GIT_DESCRIBE%%-*}"
-    GIT_DESCRIBE="${GIT_DESCRIBE#"$FW_FIX"-}"
+    FW_PATCH="${GIT_DESCRIBE%%-*}"
+    GIT_DESCRIBE="${GIT_DESCRIBE#"$FW_PATCH"-}"
 
     # Extract the number of commits since last tag
     NB_COMMIT_SINCE_LAST_TAG="${GIT_DESCRIBE%%-*}"
@@ -249,7 +249,7 @@ MACRO_PREFIX="${MACRO_PREFIX%%_*}"
     echo "/* Project version */";
     echo "#define ""$MACRO_PREFIX""_MAJOR                     $FW_MAJOR";
     echo "#define ""$MACRO_PREFIX""_MINOR                     $FW_MINOR";
-    echo "#define ""$MACRO_PREFIX""_FIX                       $FW_FIX";
+    echo "#define ""$MACRO_PREFIX""_PATCH                     $FW_PATCH";
     echo ""
     echo "/* Git repo info */";
     echo "#define ""$MACRO_PREFIX""_BRANCH_NAME               \"$BRANCH_NAME\"";
@@ -269,10 +269,10 @@ if cmp -s "${FILE_PATH}" "${FILE_PATH}_tmp.h"
 then
     # New file and previous one are identical. No need to rewrite it
     rm "${FILE_PATH}_tmp.h"
-    echo "==> \"$FILE_PATH\" unchanged: $TAG_PREFIX$FW_MAJOR.$FW_MINOR.$FW_FIX (sha: $COMMIT_SHA)"
+    echo "==> \"$FILE_PATH\" unchanged: $TAG_PREFIX$FW_MAJOR.$FW_MINOR.$FW_PATCH (sha: $COMMIT_SHA)"
     exit 0 # exit with the success code
 else
     mv "${FILE_PATH}_tmp.h" "${FILE_PATH}"
-    echo "==> \"$FILE_PATH\" updated: $TAG_PREFIX$FW_MAJOR.$FW_MINOR.$FW_FIX (sha: $COMMIT_SHA)"
+    echo "==> \"$FILE_PATH\" updated: $TAG_PREFIX$FW_MAJOR.$FW_MINOR.$FW_PATCH (sha: $COMMIT_SHA)"
     exit 0 # exit with the success code
 fi

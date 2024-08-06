@@ -31,12 +31,12 @@ extract_from_header() {
 # Extract values from c-versionner.sh script
 VERSION_MAJOR_FILE1=$(extract_from_script "C_VERSIONNER_MAJOR")
 VERSION_MINOR_FILE1=$(extract_from_script "C_VERSIONNER_MINOR")
-VERSION_BUILD_FILE1=$(extract_from_script "C_VERSIONNER_FIX")
+VERSION_PATCH_FILE1=$(extract_from_script "C_VERSIONNER_PATCH")
 
 # Extract values from generated header file
 VERSION_MAJOR_FILE2=$(extract_from_header "VERSION_MAJOR")
 VERSION_MINOR_FILE2=$(extract_from_header "VERSION_MINOR")
-VERSION_BUILD_FILE2=$(extract_from_header "VERSION_FIX")
+VERSION_PATCH_FILE2=$(extract_from_header "VERSION_PATCH")
 
 # Initialize the status flag
 status=0
@@ -58,7 +58,7 @@ compare_versions() {
 # Perform comparisons
 compare_versions "MAJOR" "$VERSION_MAJOR_FILE1" "$VERSION_MAJOR_FILE2"
 compare_versions "MINOR" "$VERSION_MINOR_FILE1" "$VERSION_MINOR_FILE2"
-compare_versions "BUILD" "$VERSION_BUILD_FILE1" "$VERSION_BUILD_FILE2"
+compare_versions "BUILD" "$VERSION_PATCH_FILE1" "$VERSION_PATCH_FILE2"
 
 # Return the status
 exit $status

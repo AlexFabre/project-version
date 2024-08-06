@@ -44,7 +44,7 @@ c-versionner.sh [options]
 /* Project version */
 #define VERSION_MAJOR                     0
 #define VERSION_MINOR                     3
-#define VERSION_FIX                       2
+#define VERSION_PATCH                     2
 
 /* Git repo info */
 #define VERSION_BRANCH_NAME               "setting-ci"
