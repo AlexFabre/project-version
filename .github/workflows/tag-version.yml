@@ -18,8 +18,8 @@ jobs:
         with:
           fetch-depth: 0 # Fetch all history for all branches and tags
 
-      - name: Run c-versionner on itself
-        run: ./c-versionner.sh -l
+      - name: Run rever on itself
+        run: ./rever.sh -l
 
       - name: Checking version
-        run: ci-script/check_version.sh c-versionner.sh version.h
+        run: ci-script/check_rever_version.sh rever.sh version.h

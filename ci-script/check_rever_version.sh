@@ -16,7 +16,7 @@ if [ -z "$FILE2" ]; then
     exit 1
 fi
 
-# Function to extract values from c-versionner.sh script
+# Function to extract values from rever.sh script
 extract_from_script() {
     var_name=$1
     grep "^$var_name" "$FILE1" | cut -d '=' -f 2 | tr -d ' \t'
@@ -28,10 +28,10 @@ extract_from_header() {
     grep "^#define[ \t]\+$var_name" "$FILE2" | awk '{print $3}'
 }
 
-# Extract values from c-versionner.sh script
-VERSION_MAJOR_FILE1=$(extract_from_script "C_VERSIONNER_MAJOR")
-VERSION_MINOR_FILE1=$(extract_from_script "C_VERSIONNER_MINOR")
-VERSION_PATCH_FILE1=$(extract_from_script "C_VERSIONNER_PATCH")
+# Extract values from rever.sh script
+VERSION_MAJOR_FILE1=$(extract_from_script "REVER_MAJOR")
+VERSION_MINOR_FILE1=$(extract_from_script "REVER_MINOR")
+VERSION_PATCH_FILE1=$(extract_from_script "REVER_PATCH")
 
 # Extract values from generated header file
 VERSION_MAJOR_FILE2=$(extract_from_header "VERSION_MAJOR")
