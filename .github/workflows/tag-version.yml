@@ -1,6 +1,6 @@
 # Code quality workflow
 
-name: Code Quality
+name: Tag version
 
 on:
   push:
