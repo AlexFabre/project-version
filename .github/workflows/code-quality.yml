@@ -17,6 +17,8 @@ jobs:
 
       - name: ShellCheck action
         uses: ludeeus/action-shellcheck@2.0.0
+        with:
+          version: v0.10.0
 
   Codespell:
     runs-on: ubuntu-latest
@@ -27,4 +29,6 @@ jobs:
 
       - name: Codespell action
         uses: codespell-project/actions-codespell@v2
+        with:
+          ignore_words_list: rever
         
