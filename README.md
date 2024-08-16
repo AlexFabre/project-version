@@ -1,12 +1,22 @@
 # rever
 
-A little POSIX shell script that generates revision  and version information for your C project.
+A little POSIX shell script that generates revision and version information for your C project.
 
-Works by parsing the git describe command to retrieve all information since the last tag found.
+Works by parsing the `git describe` command to retrieve all information.
+
+## Compatibility
+
+- [x] C/C++ project
+- [ ] Zephyr project
+
+## Requirements
+
+- Restricted to git based repository.
+- Git must be available from the PATH. (On windows, run the script with git bash).
 
 ## Usage
 
-Copy the script in your git working repo and let the magic happen.
+Copy the `rever.sh` script into your repository and let the magic happen.
 
 All available options can be listed with option `-h`
 
@@ -31,7 +41,7 @@ rever.sh [options]
  * @file version.h
  * @brief version information of project build
  *
- * Generated with rever.sh 0.4.0
+ * Generated with rever.sh 0.4.1
  * A little POSIX shell script to generate
  * version information for your C project
  *
@@ -43,28 +53,29 @@ rever.sh [options]
 
 /* Project version */
 #define VERSION_MAJOR                     0
-#define VERSION_MINOR                     3
-#define VERSION_PATCH                     2
+#define VERSION_MINOR                     4
+#define VERSION_PATCH                     1
 
 /* Git repo info */
-#define VERSION_BRANCH_NAME               "setting-ci"
-#define VERSION_NB_COMMITS_SINCE_LAST_TAG 10
-#define VERSION_COMMIT_SHORT_SHA          "7f12c86"
+#define VERSION_BRANCH_NAME               "wip/documentation"
+#define VERSION_NB_COMMITS_SINCE_LAST_TAG 0
+#define VERSION_COMMIT_SHORT_SHA          "4850f52"
 
 /* Build date time (UTC) */
-#define VERSION_BUILD_DAY                 6
+#define VERSION_BUILD_DAY                 16
 #define VERSION_BUILD_MONTH               8
 #define VERSION_BUILD_YEAR                2024
-#define VERSION_BUILD_HOUR                6
+#define VERSION_BUILD_HOUR                8
 
 #endif /* VERSION_H__ */
+
 ~~~
 
 ## Code quality
 - Shellcheck
 - Codespell
 
-## TODO List
+## Improvements...
 
 * Path handling in `file_path_checker` function: The function currently assumes that the provided path always ends with a filename. If the input path doesn't have a filename or extension, it defaults to `version.h`. This could lead to incorrect behavior in some cases. Consider validating the input path and handling errors more explicitly.
 * Zephyr compliance: Zephyr project uses a VERSION file, similar to what is currently generated. Through an option, the script should be able to generate this VERSION file. 
