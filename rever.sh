@@ -11,7 +11,7 @@
 #   $> rever.sh -o dir/subdir/version.h
 #
 # Usage with custom tag names fw-XX.YY.ZZ
-#   $> rever.sh -o dir/subdir/file_version.h -f fw-
+#   $> rever.sh -o dir/subdir/file_version.h -t fw-
 # 
 # ==========================================
 
@@ -42,8 +42,8 @@ EXTENSION=".h"
 
 # By default the script will look for tags in the format
 # v1.0.4
-# Option -f allow for custom tag prefix
-# ex. "-f fv-" if your tags are like this "fw-1.0.4" 
+# Option -t allow for custom tag prefix
+# ex. "-t fv-" if your tags are like this "fw-1.0.4" 
 TAG_PREFIX="v"
 
 # By default the script runs and prints only:
@@ -63,29 +63,27 @@ OUTPUT_FILE_PATH=$DEFAULT_FILE_NAME
 # Script call checks
 # ==========================================
 
-# The user has to provide the path for the
-# dest file when calling the script
 usage() {
     echo "==> $REVER_SCRIPT_NAME $REVER_VERSION"
     echo "$REVER_INTRO_L1"
     echo "$REVER_INTRO_L2"
     echo "$REVER_INTRO_L3"
     echo "Usage:"
-    echo "$REVER_SCRIPT_NAME [options]"
-    echo "-o <output file path>"
-    echo "-f <tag format> (default 'v')"
-    echo "-h <help>"
-    echo "-v <script version>"
-    echo "-l <script logs> (default none)"
+    echo "$REVER_SCRIPT_NAME <options>"
+    echo "    -o <output file>"
+    echo "    -t <git tag format> (default 'v')"
+    echo "    -h <help>"
+    echo "    -v <script version>"
+    echo "    -l <script logs> (default none)"
 }
 
 # Check the call of the script
-while getopts ":o:f:hvl" opt; do
+while getopts ":o:t:hvl" opt; do
     case "${opt}" in
         o)
             OUTPUT_FILE_PATH=${OPTARG}
             ;;
-        f)
+        t)
             TAG_PREFIX=${OPTARG}
             ;;
         h)

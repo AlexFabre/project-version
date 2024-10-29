@@ -27,12 +27,12 @@ A little POSIX shell script to generate
 version information for your C project.
 ref: https://github.com/AlexFabre/rever
 Usage:
-rever.sh [options]
--o <output file path>
--f <tag format> (default 'v')
--h <help>
--v <script version>
--l <script logs> (default none)
+rever.sh <options>
+    -o <output file>
+    -t <git tag format> (default 'v')
+    -h <help>
+    -v <script version>
+    -l <script logs> (default none)
 ~~~
 
 ### Example of generated header
