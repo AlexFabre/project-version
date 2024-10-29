@@ -24,7 +24,8 @@ All available options can be listed with option `-h`
 $ ./rever.sh -h
 ==> rever.sh 0.4.1
 A little POSIX shell script to generate
-version information for your C project
+version information for your C project.
+ref: https://github.com/AlexFabre/rever
 Usage:
 rever.sh [options]
 -o <output file path>
