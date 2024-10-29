@@ -22,7 +22,7 @@ All available options can be listed with option `-h`
 
 ~~~sh
 $ ./rever.sh -h
-==> rever.sh 0.4.1
+==> rever.sh 0.5.0
 A little POSIX shell script to generate
 version information for your C project.
 ref: https://github.com/AlexFabre/rever
@@ -45,7 +45,7 @@ rever.sh <options>
  * @file version.h
  * @brief version information of project build
  *
- * Generated with rever.sh 0.4.1
+ * Generated with rever.sh 0.5.0
  * A little POSIX shell script to generate
  * version information for your C project.
  * ref: https://github.com/AlexFabre/rever
@@ -58,8 +58,8 @@ rever.sh <options>
 
 /* Project version */
 #define VERSION_MAJOR                     0
-#define VERSION_MINOR                     4
-#define VERSION_PATCH                     1
+#define VERSION_MINOR                     5
+#define VERSION_PATCH                     0
 
 /* Git repo info */
 #define VERSION_BRANCH_NAME               "feat/add-zephyr-compatibility"
@@ -85,7 +85,7 @@ rever.sh <options>
 #
 # ref: https://docs.zephyrproject.org/latest/build/version/index.html
 #
-# Generated with rever.sh 0.4.1
+# Generated with rever.sh 0.5.0
 # A little POSIX shell script to generate
 # version information for your C project.
 # ref: https://github.com/AlexFabre/rever
@@ -94,8 +94,8 @@ rever.sh <options>
 # is generated with rever.sh script.
 
 VERSION_MAJOR = 0
-VERSION_MINOR = 4
-PATCHLEVEL = 1
+VERSION_MINOR = 5
+PATCHLEVEL = 0
 VERSION_TWEAK = 6
 EXTRAVERSION = "feat/add-zephyr-compatibility08df77b"
 

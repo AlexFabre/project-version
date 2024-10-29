@@ -17,8 +17,8 @@
 
 # Script self version information
 REVER_MAJOR=0
-REVER_MINOR=4
-REVER_PATCH=1
+REVER_MINOR=5
+REVER_PATCH=0
 
 # Print variables
 REVER_SCRIPT_NAME="rever.sh"
