@@ -1,13 +1,26 @@
 # rever
 
-A little POSIX shell script that generates revision and version information for your C project.
+A little POSIX shell script that generates a C header containing the version information (Major Minor etc...) of a Git based repository.
 
-Works by parsing the `git describe` command to retrieve all information.
+The script simply parses the `git describe` command to extract the firmware information, and create the corresponding defines.
 
 ## Compatibility
 
-- [x] C/C++ project
-- [x] Zephyr project
+### Genuine C/C++ project
+
+The script will generate a C header file.
+
+```sh
+./rever.sh -o project/include/version.h
+```
+
+### Zephyr project
+
+The script will generate the cmake version file.
+
+```sh
+./rever.sh -f zephyr -o cmake-project/VERSION
+```
 
 ## Requirements
 
@@ -16,7 +29,7 @@ Works by parsing the `git describe` command to retrieve all information.
 
 ## Usage
 
-Copy the `rever.sh` script into your repository and let the magic happen.
+Clone the repo or simply copy the `rever.sh` script into your repository and let the magic happen.
 
 All available options can be listed with option `-h`
 
