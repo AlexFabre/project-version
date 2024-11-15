@@ -22,4 +22,4 @@ jobs:
         run: ./project-version.sh -l -o version.h -f h -t v
 
       - name: Checking version
-        run: ci-script/check_script_self_version.sh project-version.sh version.h
+        run: test/check_script_self_version.sh project-version.sh version.h
