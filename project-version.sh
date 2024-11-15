@@ -1,6 +1,6 @@
 #!/bin/sh
 # ==========================================
-#   rever - A little POSIX shell script to generate
+#   project-version - A little POSIX shell script to generate
 #           version information for your C project
 #   Copyright (C) 2024 Alex Fabre
 #   [Released under MIT License. Please refer to license.txt for details]
@@ -8,40 +8,37 @@
 
 # ==========================================
 # Usage with standard tag names vXX.YY.ZZ
-#   $> rever.sh -o dir/subdir/version.h
+#   $> project-version.sh -o dir/subdir/version.h
 #
 # Usage with custom tag names fw-XX.YY.ZZ
-#   $> rever.sh -o dir/subdir/file_version.h -t fw-
+#   $> project-version.sh -o dir/subdir/file_version.h -t fw-
 # 
 # ==========================================
 
 # Script self version information
-REVER_MAJOR=0
-REVER_MINOR=5
-REVER_PATCH=0
+PROJECT_VERSION_MAJOR=0
+PROJECT_VERSION_MINOR=6
+PROJECT_VERSION_PATCH=0
 
 # Print variables
-REVER_SCRIPT_NAME="rever.sh"
-REVER_VERSION="$REVER_MAJOR.$REVER_MINOR.$REVER_PATCH"
-REVER_INTRO_L1="A little POSIX shell script to generate"
-REVER_INTRO_L2="version information for your C project."
-REVER_INTRO_L3="ref: https://github.com/AlexFabre/rever"
+PROJECT_VERSION_SCRIPT_NAME="project-version.sh"
+PROJECT_VERSION_VERSION="$PROJECT_VERSION_MAJOR.$PROJECT_VERSION_MINOR.$PROJECT_VERSION_PATCH"
+PROJECT_VERSION_INTRO_L1="A little POSIX shell script to generate"
+PROJECT_VERSION_INTRO_L2="version information for your C project."
+PROJECT_VERSION_INTRO_L3="ref: https://github.com/AlexFabre/project-version"
 
 # ==========================================
 # Default settings
 # ==========================================
 
-# If the path provided with option -o does end on a directory 
-# (with a trailing '/' (ex. -o dir/subdir/ )), then the script
-# will create the file in that directory with the following name.
-DEFAULT_FILE_NAME="VERSION"
-
+# Option -t <...>
 # By default the script will look for tags in the format
 # v1.0.4
 # Option -t allow for custom tag prefix
 # ex. "-t fv-" if your tags are like this "fw-1.0.4" 
-TAG_PREFIX="v"
+GIT_TAG_PREFIX="v"
 
+# Option -l
 # By default the script runs and prints only:
 # On success:
 # ==> "./version.h" updated: v0.3.2 (sha: e03685b)
@@ -52,27 +49,37 @@ TAG_PREFIX="v"
 # out during execution
 LOG_VERBOSITY=0
 
-# Default file path output
-OUTPUT_FILE_PATH=$DEFAULT_FILE_NAME
+# If the path provided with option -o does end on a directory 
+# (with a trailing '/' (ex. -o dir/subdir/ )), then the script
+# will create the file in that directory with the following name:
+DEFAULT_OUTPUT_FILE_NAME="version"
 
-OUTPUT_FILE_FORMAT="base"
+# Option -o <...>
+# Default file path output
+OUTPUT_FILE_PATH=$DEFAULT_OUTPUT_FILE_NAME
+
+# Option -f <...>
+# By default the script will generate a header file (.h) with the
+# various definitions.
+OUTPUT_FORMAT="h"
 
 # ==========================================
 # Script call checks
 # ==========================================
 
 usage() {
-    echo "==> $REVER_SCRIPT_NAME $REVER_VERSION"
-    echo "$REVER_INTRO_L1"
-    echo "$REVER_INTRO_L2"
-    echo "$REVER_INTRO_L3"
+    echo "==> $PROJECT_VERSION_SCRIPT_NAME $PROJECT_VERSION_VERSION"
+    echo "$PROJECT_VERSION_INTRO_L1"
+    echo "$PROJECT_VERSION_INTRO_L2"
+    echo "$PROJECT_VERSION_INTRO_L3"
     echo "Usage:"
-    echo "$REVER_SCRIPT_NAME <options>"
-    echo "    -f <project format>"
-    echo "        -f zephyr: Generate a 'VERSION' file, specific to zephyr projects"
-    echo "        -f base: (default) Generate the basic rever format file"
-    echo "    -o <output file>"
-    echo "    -t <git tag format> (default 'v')"
+    echo "$PROJECT_VERSION_SCRIPT_NAME <options>"
+    echo "    -f <output format>"
+    echo "        -f h : (default) Generate a C header file (.h)."
+    echo "        -f hpp : Generate a C++ header file (.hpp)."
+    echo "        -f cmake : Generate a cmake variable file."
+    echo "    -o <output file name>"
+    echo "    -t <git tag format> (default 'v') (ex. 'v' will match tags 'v0.3.1' and 'v0.2.1-beta' but not tags '1.3.4' nor 'version3.2.3')"
     echo "    -h <help>"
     echo "    -v <script version>"
     echo "    -l <script logs> (default none)"
@@ -82,20 +89,20 @@ usage() {
 while getopts ":f:o:t:hvl" opt; do
     case "${opt}" in
         f)
-            OUTPUT_FILE_FORMAT=${OPTARG}
+            OUTPUT_FORMAT=${OPTARG}
             ;;
         o)
             OUTPUT_FILE_PATH=${OPTARG}
             ;;
         t)
-            TAG_PREFIX=${OPTARG}
+            GIT_TAG_PREFIX=${OPTARG}
             ;;
         h)
             usage
             exit 0
             ;;
         v)
-            echo "$REVER_VERSION"
+            echo "$PROJECT_VERSION_VERSION"
             exit 0
             ;;
         l)
@@ -112,7 +119,8 @@ done
 # Functions
 # ==========================================
 
-# Checks that the path finishes with a valid filename
+# Reads a given 'output file name' and echoes it back, properly formatted.
+# If the file is not given, the default name 'version' is used.
 #   ex. valid path with file name
 #       Input "src/subdir/version.h"
 #       Output "src/subdir/version.h"
@@ -129,16 +137,18 @@ file_path_checker() {
 
     # Default filename when missing
     if [ -z "$filename" ]; then
-    filename="$DEFAULT_FILE_NAME""$EXTENSION"
+    filename="$DEFAULT_OUTPUT_FILE_NAME""$OUTPUT_FILE_EXTENSION"
     fi
 
     # Appends the extension if missing
-    filename="${filename%"$EXTENSION"}$EXTENSION"
+    filename="${filename%"$OUTPUT_FILE_EXTENSION"}$OUTPUT_FILE_EXTENSION"
 
     # Return the updated path
     echo "$(dirname "$1")/$filename"
 }
 
+# Print a log message
+# Requires option -l
 log() {
     if [ "$LOG_VERBOSITY" = "1" ]
     then
@@ -157,31 +167,36 @@ then
     exit 1
 fi
 
+# Print git version
 git_version=$(git --version)
 log "$git_version"
 
 # Handle file format depending on project format
-log "Format: $OUTPUT_FILE_FORMAT"
-if [ "$OUTPUT_FILE_FORMAT" = "base" ]; then
-    EXTENSION=".h"
+log "Output format: $OUTPUT_FORMAT"
+if [ "$OUTPUT_FORMAT" = "h" ]; then
+    OUTPUT_FILE_EXTENSION=".h"
 fi
 
-if [ "$OUTPUT_FILE_FORMAT" = "zephyr" ]; then
-    EXTENSION=""
+if [ "$OUTPUT_FORMAT" = "hpp" ]; then
+    OUTPUT_FILE_EXTENSION=".hpp"
+fi
+
+if [ "$OUTPUT_FORMAT" = "cmake" ]; then
+    OUTPUT_FILE_EXTENSION=""
 fi
 
 # Version file path
-FILE_PATH=$(file_path_checker "$OUTPUT_FILE_PATH")
+FORMATED_OUTPUT_FILE_PATH=$(file_path_checker "$OUTPUT_FILE_PATH")
 
-log "output file:" "$FILE_PATH"
+log "output file:" "$FORMATED_OUTPUT_FILE_PATH"
 
-log "tag prefix:" "$TAG_PREFIX"
+log "tag prefix:" "$GIT_TAG_PREFIX"
 
-tag_list=$(git tag -l "$TAG_PREFIX""[0-9]*.[0-9]*.[0-9]*")
+tag_list=$(git tag -l "$GIT_TAG_PREFIX""[0-9]*.[0-9]*.[0-9]*")
 log "tag list:" "$tag_list"
 
 # Git describe command
-GIT_DESCRIBE=$(git describe --tags --long --match "${TAG_PREFIX}[0-9]*.[0-9]*.[0-9]*" 2> /dev/null)
+GIT_DESCRIBE=$(git describe --tags --long --match "${GIT_TAG_PREFIX}[0-9]*.[0-9]*.[0-9]*" 2> /dev/null)
 log "git describe output:" "$GIT_DESCRIBE"
 
 # Check the length of the git describe result
@@ -203,7 +218,7 @@ else
     # Extract the version parts using substring manipulation
 
     # Remove the leading tag prefix
-    GIT_DESCRIBE="${GIT_DESCRIBE#"$TAG_PREFIX"}"
+    GIT_DESCRIBE="${GIT_DESCRIBE#"$GIT_TAG_PREFIX"}"
 
     # Extract the version parts using substring manipulation
     FW_MAJOR="${GIT_DESCRIBE%%.*}"
@@ -237,52 +252,46 @@ MONTH=$(date -u +"%-m")
 HOUR=$(date -u +"%-H")
 
 # Extract filename with extension...
-BASENAME="$(basename "$FILE_PATH")"
+OUTPUT_FILE_NAME="$(basename "$FORMATED_OUTPUT_FILE_PATH")"
 
-# Generated for a Zephyr project
-if [ "$OUTPUT_FILE_FORMAT" = "zephyr" ]; then
+# Generated for a cmake project
+if [ "$OUTPUT_FORMAT" = "cmake" ]; then
     # Modify the tmp version file
     {   echo "# This file declares the firmware revision information";
-        echo "# both for cmake and for mcuboot";
         echo "#";
-        echo "# ref: https://docs.zephyrproject.org/latest/build/version/index.html";
-        echo "#";
-        echo "# Generated with $REVER_SCRIPT_NAME $REVER_VERSION";
-        echo "# $REVER_INTRO_L1";
-        echo "# $REVER_INTRO_L2";
-        echo "# $REVER_INTRO_L3";
+        echo "# Generated with $PROJECT_VERSION_SCRIPT_NAME $PROJECT_VERSION_VERSION";
+        echo "# $PROJECT_VERSION_INTRO_L1";
+        echo "# $PROJECT_VERSION_INTRO_L2";
+        echo "# $PROJECT_VERSION_INTRO_L3";
         echo "#";
         echo "# Do not edit this file manually. Its content";
-        echo "# is generated with rever.sh script.";
+        echo "# is generated with project-version.sh script.";
         echo "";
         echo "VERSION_MAJOR = $FW_MAJOR";
         echo "VERSION_MINOR = $FW_MINOR";
         echo "PATCHLEVEL = $FW_PATCH";
         echo "VERSION_TWEAK = $NB_COMMIT_SINCE_LAST_TAG";
         echo "EXTRAVERSION = $BRANCH_NAME";
-    } > "${FILE_PATH}_tmp"
-fi
-
-# Generated for a base project
-if [ "$OUTPUT_FILE_FORMAT" = "base" ]; then
+    } > "${FORMATED_OUTPUT_FILE_PATH}_tmp"
+else
     # Change filename chars to UPPER and non-alphanum to UNDERSCORES...
-    BUILD_LOCK=$(echo "${BASENAME}" | awk 'BEGIN { getline; print toupper($0) }' | sed 's/[^[:alnum:]\r\t]/_/g')
+    BUILD_LOCK=$(echo "${OUTPUT_FILE_NAME}" | awk 'BEGIN { getline; print toupper($0) }' | sed 's/[^[:alnum:]\r\t]/_/g')
 
     MACRO_PREFIX="${BUILD_LOCK#_}"
     MACRO_PREFIX="${MACRO_PREFIX%%_*}"
 
     # Modify the tmp version file
     {   echo "/**";
-        echo " * @file $BASENAME";
-        echo " * @brief version information of project build";
+        echo " * @file $OUTPUT_FILE_NAME";
+        echo " * @brief This file declares the firmware revision information";
         echo " *";
-        echo " * Generated with $REVER_SCRIPT_NAME $REVER_VERSION";
-        echo " * $REVER_INTRO_L1";
-        echo " * $REVER_INTRO_L2";
-        echo " * $REVER_INTRO_L3";
+        echo " * Generated with $PROJECT_VERSION_SCRIPT_NAME $PROJECT_VERSION_VERSION";
+        echo " * $PROJECT_VERSION_INTRO_L1";
+        echo " * $PROJECT_VERSION_INTRO_L2";
+        echo " * $PROJECT_VERSION_INTRO_L3";
         echo " *";
         echo " * Do not edit this file manually. Its content";
-        echo " * is generated with rever.sh script.";
+        echo " * is generated with project-version.sh script.";
         echo " */";
         echo "#ifndef ${BUILD_LOCK}__";
         echo "#define ${BUILD_LOCK}__";
@@ -304,17 +313,17 @@ if [ "$OUTPUT_FILE_FORMAT" = "base" ]; then
         echo "#define ""$MACRO_PREFIX""_BUILD_HOUR                $HOUR";
         echo "";
         echo "#endif /* ${BUILD_LOCK}__ */";
-    } > "${FILE_PATH}_tmp${EXTENSION}"
+    } > "${FORMATED_OUTPUT_FILE_PATH}_tmp${OUTPUT_FILE_EXTENSION}"
 fi
 
-if cmp -s "${FILE_PATH}" "${FILE_PATH}_tmp${EXTENSION}"
+if cmp -s "${FORMATED_OUTPUT_FILE_PATH}" "${FORMATED_OUTPUT_FILE_PATH}_tmp${OUTPUT_FILE_EXTENSION}"
 then
     # New file and previous one are identical. No need to rewrite it
-    rm "${FILE_PATH}_tmp${EXTENSION}"
-    echo "==> \"$FILE_PATH\" unchanged: $TAG_PREFIX$FW_MAJOR.$FW_MINOR.$FW_PATCH (sha: $COMMIT_SHA)"
+    rm "${FORMATED_OUTPUT_FILE_PATH}_tmp${OUTPUT_FILE_EXTENSION}"
+    echo "==> \"$FORMATED_OUTPUT_FILE_PATH\" unchanged: $GIT_TAG_PREFIX$FW_MAJOR.$FW_MINOR.$FW_PATCH (sha: $COMMIT_SHA)"
     exit 0 # exit with the success code
 else
-    mv "${FILE_PATH}_tmp${EXTENSION}" "${FILE_PATH}"
-    echo "==> \"$FILE_PATH\" updated: $TAG_PREFIX$FW_MAJOR.$FW_MINOR.$FW_PATCH (sha: $COMMIT_SHA)"
+    mv "${FORMATED_OUTPUT_FILE_PATH}_tmp${OUTPUT_FILE_EXTENSION}" "${FORMATED_OUTPUT_FILE_PATH}"
+    echo "==> \"$FORMATED_OUTPUT_FILE_PATH\" updated: $GIT_TAG_PREFIX$FW_MAJOR.$FW_MINOR.$FW_PATCH (sha: $COMMIT_SHA)"
     exit 0 # exit with the success code
 fi

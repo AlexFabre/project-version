@@ -1,5 +1,4 @@
-# Generated file (base format)
+# Generated file
 version.h
-
-# Generated file (Zephyr format)
+version.hpp
 VERSION

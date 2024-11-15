@@ -18,8 +18,8 @@ jobs:
         with:
           fetch-depth: 0 # Fetch all history for all branches and tags
 
-      - name: Run rever on itself
-        run: ./rever.sh -l -o base_version.h -f base -t v
+      - name: Run project-version on itself
+        run: ./project-version.sh -l -o version.h -f h -t v
 
       - name: Checking version
-        run: ci-script/check_rever_version.sh rever.sh base_version.h
+        run: ci-script/check_script_self_version.sh project-version.sh version.h
