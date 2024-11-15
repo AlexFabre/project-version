@@ -1,25 +1,33 @@
 # project-version
 
-A little POSIX shell script that generates a C header containing the version information (Major Minor etc...) of a Git based repository.
+A little POSIX shell script that generates a C/C++ header or a Cmake variable file containing the version information (Major Minor etc...) of a Git based repository.
 
 The script simply parses the `git describe` command to extract the firmware information, and create the corresponding defines.
 
 ## Compatibility
 
-### Genuine C/C++ project
+### C project
 
 The script will generate a C header file.
 
 ```sh
-./project-version.sh -o project/include/version.h
+./project-version.sh -f h -o project/include/version.h
 ```
 
-### Zephyr project
+### C++ project
 
-The script will generate the cmake version file.
+The script will generate a C++ header file.
 
 ```sh
-./project-version.sh -f zephyr -o cmake-project/VERSION
+./project-version.sh -f hpp -o project/include/version.hpp
+```
+
+### Cmake project
+
+The script will generate a cmake variable file.
+
+```sh
+./project-version.sh -f cmake -o cmake-project/VERSION
 ```
 
 ## Requirements
