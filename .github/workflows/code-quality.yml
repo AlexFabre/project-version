@@ -30,5 +30,5 @@ jobs:
       - name: Codespell action
         uses: codespell-project/actions-codespell@v2
         with:
-          ignore_words_list: rever
+          ignore_words_list: project-version
         
