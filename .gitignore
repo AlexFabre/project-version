@@ -2,3 +2,8 @@
 version.h
 version.hpp
 VERSION
+version.txt
+
+# direnv variables
+.envrc
+.direnv
