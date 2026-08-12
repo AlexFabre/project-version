@@ -18,7 +18,7 @@
 # Script self version information
 PROJECT_VERSION_MAJOR=0
 PROJECT_VERSION_MINOR=7
-PROJECT_VERSION_PATCH=0
+PROJECT_VERSION_PATCH=1
 
 # Print variables
 PROJECT_VERSION_SCRIPT_NAME="project-version.sh"
@@ -201,7 +201,6 @@ tag_list=$(git tag -l "$GIT_TAG_PREFIX""[0-9]*.[0-9]*.[0-9]*")
 log "tag list:" "$tag_list"
 
 # Git describe command
-GIT_DESCRIBE_SHORT=$(git describe --tags --match "${GIT_TAG_PREFIX}[0-9]*.[0-9]*.[0-9]*" 2> /dev/null)
 GIT_DESCRIBE=$(git describe --tags --long --match "${GIT_TAG_PREFIX}[0-9]*.[0-9]*.[0-9]*" 2> /dev/null)
 log "git describe output:" "$GIT_DESCRIBE"
 
@@ -278,8 +277,6 @@ if [ "$OUTPUT_FORMAT" = "zephyr" ]; then
         echo "PATCHLEVEL = $FW_PATCH";
         echo "VERSION_TWEAK = $NB_COMMIT_SINCE_LAST_TAG";
         echo "EXTRAVERSION = $BRANCH_NAME";
-        echo "";
-        echo "PROJECT_VER = \"$FW_MAJOR.$FW_MINOR.$FW_PATCH-$COMMIT_SHA";
     } > "${FORMATED_OUTPUT_FILE_PATH}_tmp"
 elif [ "$OUTPUT_FORMAT" = "cmake" ]; then
     # Modify the tmp version file
@@ -297,7 +294,6 @@ elif [ "$OUTPUT_FORMAT" = "cmake" ]; then
         echo "set(APP_FW_MAJOR                     $FW_MAJOR)";
         echo "set(APP_FW_MINOR                     $FW_MINOR)";
         echo "set(APP_FW_PATCH                     $FW_PATCH)";
-        echo "set(PROJECT_VER                      \"$GIT_DESCRIBE_SHORT\")";
         echo ""
         echo "# Git repo info";
         echo "set(APP_FW_BRANCH_NAME               \"$BRANCH_NAME\")";
