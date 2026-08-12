@@ -51,7 +51,7 @@ All available options can be listed with option `-h`
 
 ```sh
 $ ./project-version.sh -h
-==> project-version.sh 0.7.0
+==> project-version.sh 0.7.1
 A little POSIX shell script to generate
 version information for your C project.
 ref: https://github.com/AlexFabre/project-version
@@ -111,7 +111,7 @@ project-version.sh <options>
 ```txt
 # This file declares the firmware revision information
 #
-# Generated with project-version.sh 0.6.0
+# Generated with project-version.sh 0.7.1
 # A little POSIX shell script to generate
 # version information for your C project.
 # ref: https://github.com/AlexFabre/project-version
@@ -131,7 +131,7 @@ EXTRAVERSION = main
 ```cmake
 # This file declares the firmware revision information
 #
-# Generated with project-version.sh 0.7.0
+# Generated with project-version.sh 0.7.1
 # A little POSIX shell script to generate
 # version information for your C project.
 # ref: https://github.com/AlexFabre/project-version
@@ -141,20 +141,19 @@ EXTRAVERSION = main
 
 # Project version
 set(APP_FW_MAJOR                     0)
-set(APP_FW_MINOR                     6)
+set(APP_FW_MINOR                     5)
 set(APP_FW_PATCH                     0)
-set(PROJECT_VER                      "v0.6.0")
 
 # Git repo info
-set(APP_FW_BRANCH_NAME               "feat/improve-cmake-support")
-set(APP_FW_NB_COMMITS_SINCE_LAST_TAG 0)
-set(APP_FW_COMMIT_SHORT_SHA          "9f31bce")
+set(APP_FW_BRANCH_NAME               "main")
+set(APP_FW_NB_COMMITS_SINCE_LAST_TAG 3)
+set(APP_FW_COMMIT_SHORT_SHA          "b620737")
 
 # Build date time (UTC)
-set(APP_FW_BUILD_DAY                 24)
+set(APP_FW_BUILD_DAY                 25)
 set(APP_FW_BUILD_MONTH               11)
-set(APP_FW_BUILD_YEAR                2025)
-set(APP_FW_BUILD_HOUR                13)
+set(APP_FW_BUILD_YEAR                2024)
+set(APP_FW_BUILD_HOUR                9)
 ```
 
 ## Code quality
